@@ -86,38 +86,58 @@ float ex(float x){
     return exp(-x);
 }
 
-float uni(int n, fct_ptr funcao){
-    //distribuição uniforme
+//distribuição uniforme
+float distribuicao(int n1, int n2){ 
     default_random_engine generator(time(NULL));
-    float a = 0.0, b = 1.0;
+    float a = float(n1), b = float(n2);
     uniform_real_distribution<float> distribution(a, b);
 
+    return distribution(generator);
+}
+
+//integral unidimensional
+float uni(int n1, int n2, fct_ptr funcao){
     float somatorio = 0;
-    for (int i = 0; i < n; ++i) {
-        float Ui = distribution(generator);
+    for (int i = n1; i < n2; ++i) {
+        float Ui = distribuicao(n1, n2);
         float g = funcao(Ui);
-        somatorio += funcao(Ui)/n;
+        somatorio += funcao(Ui)/(n2-n1);
     }
     return somatorio;
 }
 
-float multi(int n, fct_ptr funcao){
+//integral multidimensional
+float multi(int n1, int n2, int d, fct_ptr funcao){
     float somatorio = 0;
-    return somatorio;
+    for(int j = n1; j<n2; j++){
+        float g = 1.0;
+        for(int i = 0; i<d; i++){
+            g *= funcao(distribuicao(n1, n2));  
+        }
+        somatorio += g;
+    }
+    return somatorio/(n2-n1);
 }
 
 void parte2(){
     // Parte 2: Integração por Monte Carlo
 
     //integrais unidimensionais
-    float a = uni(10, seno);
+    float a = uni(0, 1, seno);
     cout << "Integral unidimensional de sin(): " << a << endl;
-    float b = uni(10, x3);
+    float b = uni(3, 7, x3);
     cout << "Integral unidimensional de x^3(): " << b << endl;
-    float c = uni(10, ex);
-    cout << "Integral unidimensional de e^-x(): " << c << endl;
+    float c = uni(0, 100, ex);
+    cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
     //integrais multidimensionais
+    int d = 1;
+    float e = multi(0, 1, d, seno);
+    cout << "Integral multidimensional de sin(): " << e << endl;
+    float f = multi(3, 7, d, x3);
+    cout << "Integral multidimensional de x^3(): " << f << endl;
+    float g = multi(0, 100, d, ex);
+    cout << "Integral multidimensional de e^-x(): " << g << endl;
 
     return;
 }
