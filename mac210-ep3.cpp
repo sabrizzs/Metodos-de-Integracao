@@ -87,12 +87,8 @@ float ex(float x){
 }
 
 //distribuição uniforme
-float distribuicao(){ 
-    default_random_engine generator(time(NULL));
-    float a = 0.0, b = 1.0;
-    uniform_real_distribution<float> distribution(a, b);
-
-    return distribution(generator);
+float distribuicao(){     
+    return float(rand() % (100 + 1)) / 100;
 }
 
 //integral unidimensional
@@ -107,16 +103,24 @@ float uni(int n1, int n2, fct_ptr funcao){
 }
 
 //integral multidimensional
-float multi(int n1, int n2, int d, fct_ptr funcao){
-    float somatorio = 0;
-    for(int j = n1; j<n2; j++){
-        float g = 1.0;
-        for(int i = 0; i<d; i++){
-            g *= funcao(distribuicao());  
-        }
-        somatorio += g;
+float multi(){
+    int intervalo = 100;
+    int pontos_circulo = 0;
+    int pontos_quadrado = 0;
+    float pi;
+
+    for(int i = 0; i < (intervalo*intervalo); i++){
+        float x = distribuicao();
+        float y = distribuicao();
+        
+        float distancia = x*x+y*y;
+
+        if(distancia <= 1) pontos_circulo++;
+        pontos_quadrado++;
+
+        pi = float(4*pontos_circulo)/pontos_quadrado;
     }
-    return somatorio/(n2-n1);
+    return pi;
 }
 
 void parte2(){
@@ -131,18 +135,14 @@ void parte2(){
     cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
     //integrais multidimensionais
-    int d = 2;
-    float e = multi(0, 1, d, seno);
-    cout << "Integral multidimensional de sin(): " << e << endl;
-    float f = multi(3, 7, d, x3);
-    cout << "Integral multidimensional de x^3(): " << f << endl;
-    float g = multi(0, 100, d, ex);
-    cout << "Integral multidimensional de e^-x(): " << g << endl;
+    cout << "Aproximacao do valor de pi: " << multi();
+    
 
     return;
 }
 
 int main(){
+    srand(time(NULL));
 
     parte1();
     parte2();
