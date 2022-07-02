@@ -71,7 +71,7 @@ void parte1(){
 
 ////////////// PARTE 2 //////////////
 
-//ponteiro para uma funcao float que aceita float e int como parametro
+//ponteiro para uma funcao float que aceita float como parametro
 typedef float (*fct_ptr)(float);
 
 float seno(float x){
@@ -103,13 +103,12 @@ float uni(int n1, int n2, fct_ptr funcao){
 }
 
 //integral multidimensional
-float multi(){
-    int intervalo = 100;
+float multi(int n){
     int pontos_circulo = 0;
     int pontos_quadrado = 0;
     float pi;
 
-    for(int i = 0; i < (intervalo*intervalo); i++){
+    for(int i = 0; i < (n*n); i++){
         float x = distribuicao();
         float y = distribuicao();
         
@@ -135,9 +134,9 @@ void parte2(){
     cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
     //integrais multidimensionais
-    cout << "Aproximacao do valor de pi: " << multi();
+    int n = 100;
+    cout << "Aproximacao do valor de pi: " << multi(n);
     
-
     return;
 }
 
