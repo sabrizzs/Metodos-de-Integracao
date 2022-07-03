@@ -157,7 +157,7 @@ float multi(int n){
 
 void parte2(){
     // Parte 2: Integração por Monte Carlo
-    float n = 1000000;
+    float n = 100000000;
 
     //integrais unidimensionais
     float a = uni(0, 1, n, seno);
