@@ -5,13 +5,16 @@
 #include <time.h>   //seed
 using namespace std;
 
+/*
+Alunas: Sabrina Araújo da Silva (nºUSP 12566182)
+        Samantha Miyahira (nº USP 11797261)
+*/
+
 ////////////// PARTE 1 //////////////
 
 void parte1(){
-    /* Parte 1:
-     * (i) Calculo do valor do trabalho por interpolacao de Lagrange
-     */
-    
+    // Parte 1: Calculo do valor do trabalho por interpolacao de Lagrange
+  
     // inicializamos os vetores que contem os pares ordenados a serem interpolados
     float X[7] = {0, 5, 10, 15, 20, 25, 30};
     float y[7] = {0.0, 1.5297, 9.512, 8.7025, 2.8087, 1.0881, 0.3537};
@@ -89,6 +92,7 @@ void parte1(){
 //ponteiro para uma funcao float que aceita float como parametro
 typedef float (*fct_ptr)(float);
 
+//funcoes das integrais
 float seno(float x){
     return sin(x);
 }
@@ -105,12 +109,13 @@ float ex(float x){
 float uni(float a, float b, float n, fct_ptr funcao){
     mt19937 mt(time(NULL));
     
-    float H = funcao(b); //valor máximo
-    float A;
+    float H = funcao(b);     //valor máximo
 
+    float A;                 //area do retangulo
     if(isnan((b-a)*H))A = 1; //evitando a multiplicação de infinito por 0 (indeterminação)
-    else A = (b-a)*H;        //area do retangulo
+    else A = (b-a)*H;        
 
+    //aproximando I a partir de números aleatórios com distribuição uniforme
     int contador = 0;
     for(int i = 0; i<n; i++){
         uniform_real_distribution<float> x1(a, b);
@@ -133,6 +138,7 @@ float multi(int n){
     int pontos_quadrado = 0;
     float pi;
 
+    //aproximando I a partir de números aleatórios com distribuição uniforme
     for(int i = 0; i < n; i++){
         uniform_real_distribution<float> x1(0.0, 1.0);
         float x = x1(mt);
