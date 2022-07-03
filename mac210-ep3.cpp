@@ -54,7 +54,7 @@ void parte1(){
     int r=6;
     float h = (b-a)/r; //dividido pelo numero de subintervalos (n-1)
     float somatorio = (h/2)*y[0];//eh zero
-    for (int i=1;i<r-1;i++){
+    for (int i=1;i<r;i++){
         somatorio += h*y[i];
     }
     somatorio += (h/2)*y[6];
