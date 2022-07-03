@@ -8,7 +8,7 @@ using namespace std;
 void parte1(){
     /* Parte 1:
      * (i) Calculo do valor do trabalho por interpolacao de Lagrange
-     */
+     
     
     // inicializmamos os vetores que contem os pares ordenados a serem interpolados
     float X[7] = {0, 5, 10, 15, 20, 25, 30};
@@ -33,7 +33,7 @@ void parte1(){
     }
     cout << "O valor da funcao interpolada eh " << som << "\n" << endl;
     
-    /* (iia) Aproximacao do valor do trabalho usando regra do trapezio composta */
+    // (iia) Aproximacao do valor do trabalho usando regra do trapezio composta 
     float h = (X[0]-X[1])/6;
     float somatorio = (h/2)*y[0];
     for (int i=1;i<6;i++){
@@ -43,7 +43,7 @@ void parte1(){
     
     cout << "Aproximando pela regra do trapezio composta, o valor do trabalho equivale a " << somatorio << "\n" << endl;
     
-    /* (iib) Aproximação por regra de Simpson composta */
+    // (iib) Aproximação por regra de Simpson composta 
     float som1 = 0;
     float som2 = 0;
     
@@ -65,8 +65,8 @@ void parte1(){
     sn = (h/3)*(y[0]+y[6]+som1+som2);
     
     cout << "Aproximando pela regra de simpson composta, o valor do trabalho equivale a " << sn << "\n" << endl;
-
-    return;
+    */
+    return; 
 }
 
 ////////////// PARTE 2 //////////////
@@ -88,9 +88,13 @@ float ex(float x){
 
 //integral unidimensional
 float uni(float a, float b, float n, fct_ptr funcao){
-    mt19937 mt(time(NULL));     
+    mt19937 mt(time(NULL));
+    
     float H = funcao(b); //valor máximo
-    float A = (b-a)*H;   //área do retângulo
+    float A;
+
+    if(isnan((b-a)*H))A = 1; //evitando a multiplicação de infinito por 0 (indeterminação)
+    else A = (b-a)*H;        //área do retângulo
 
     int contador = 0;
     for(int i = 0; i<n; i++){
@@ -141,7 +145,7 @@ void parte2(){
     float b = uni(3, 7, n, x3);
     cout << "Integral unidimensional de x^3(): " << b << endl;
 
-    int infinito = std::numeric_limits<float>::infinity();
+    float infinito = std::numeric_limits<float>::infinity();
     float c = uni(0, infinito, n, ex);
     cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
@@ -155,7 +159,7 @@ void parte2(){
 int main(){
     
     //calculo do trabalho
-    parte1();
+    //parte1();
     //integracao por monte carlo
     parte2();
 
