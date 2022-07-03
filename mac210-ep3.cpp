@@ -86,64 +86,77 @@ float ex(float x){
     return exp(-x);
 }
 
-//distribuição uniforme
-float distribuicao(){     
-    return float(rand() % (100 + 1)) / 100;
-}
-
 //integral unidimensional
-float uni(int n1, int n2, fct_ptr funcao){
-    float somatorio = 0;
-    for (int i = n1; i < n2; ++i) {
-        float Ui = distribuicao();
-        float g = funcao(Ui);
-        somatorio += funcao(Ui)/(n2-n1);
+float uni(float a, float b, float n, fct_ptr funcao){
+    mt19937 mt(time(NULL));     
+    float H = funcao(b); //valor máximo
+    float A = (b-a)*H;   //área do retângulo
+
+    int contador = 0;
+    for(int i = 0; i<n; i++){
+        uniform_real_distribution<float> x1(a, b);
+        float x = x1(mt);
+
+        uniform_real_distribution<float> y1(a, H);
+        float y = y1(mt);
+
+        float f = funcao(x);
+        if(y <= f) contador++;
     }
-    return somatorio;
+    float result = (float(contador)/n) * A;
+    return result;
 }
 
 //integral multidimensional
 float multi(int n){
+    mt19937 mt(time(NULL));
     int pontos_circulo = 0;
     int pontos_quadrado = 0;
     float pi;
 
     for(int i = 0; i < (n*n); i++){
-        float x = distribuicao();
-        float y = distribuicao();
+        uniform_real_distribution<float> x1(0.0, 1.0);
+        float x = x1(mt);
+
+        uniform_real_distribution<float> y1(0.0, 1.0);
+        float y = y1(mt);
         
         float distancia = x*x+y*y;
 
         if(distancia <= 1) pontos_circulo++;
-        pontos_quadrado++;
-
-        pi = float(4*pontos_circulo)/pontos_quadrado;
+        pontos_quadrado++; 
     }
+    pi = float(4*pontos_circulo)/pontos_quadrado;
     return pi;
 }
 
 void parte2(){
     // Parte 2: Integração por Monte Carlo
+    float n = 1000000;
 
     //integrais unidimensionais
-    float a = uni(0, 1, seno);
+    float a = uni(0, 1, n, seno);
     cout << "Integral unidimensional de sin(): " << a << endl;
-    float b = uni(3, 7, x3);
+
+    float b = uni(3, 7, n, x3);
     cout << "Integral unidimensional de x^3(): " << b << endl;
-    float c = uni(0, 100, ex);
+
+    int infinito = std::numeric_limits<float>::infinity();
+    float c = uni(0, infinito, n, ex);
     cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
+    n = 1000;
     //integrais multidimensionais
-    int n = 100;
     cout << "Aproximacao do valor de pi: " << multi(n);
     
     return;
 }
 
 int main(){
-    srand(time(NULL));
-
+    
+    //calculo do trabalho
     parte1();
+    //integracao por monte carlo
     parte2();
 
     return 1;
