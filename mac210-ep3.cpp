@@ -109,7 +109,7 @@ float uni(float a, float b, float n, fct_ptr funcao){
     float A;
 
     if(isnan((b-a)*H))A = 1; //evitando a multiplicação de infinito por 0 (indeterminação)
-    else A = (b-a)*H;        //área do retângulo
+    else A = (b-a)*H;        //area do retangulo
 
     int contador = 0;
     for(int i = 0; i<n; i++){
