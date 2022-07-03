@@ -2,7 +2,7 @@
 
 <h3>Integrantes:
 
-Sabrina Araújo     NUSP:
+Sabrina Araújo     NUSP: 12566182
 
 Samantha Miyahira NUSP: 11797261
 
