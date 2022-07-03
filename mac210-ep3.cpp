@@ -133,7 +133,7 @@ float multi(int n){
     int pontos_quadrado = 0;
     float pi;
 
-    for(int i = 0; i < (n*n); i++){
+    for(int i = 0; i < n; i++){
         uniform_real_distribution<float> x1(0.0, 1.0);
         float x = x1(mt);
 
@@ -164,7 +164,6 @@ void parte2(){
     float c = uni(0, infinito, n, ex);
     cout << "Integral unidimensional de e^-x(): " << c << "\n" << endl;
 
-    n = 1000;
     //integrais multidimensionais
     cout << "Aproximacao do valor de pi: " << multi(n) << endl;
     
