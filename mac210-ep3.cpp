@@ -5,68 +5,83 @@
 #include <time.h>   //seed
 using namespace std;
 
+////////////// PARTE 1 //////////////
+
 void parte1(){
     /* Parte 1:
      * (i) Calculo do valor do trabalho por interpolacao de Lagrange
-     
+     */
     
-    // inicializmamos os vetores que contem os pares ordenados a serem interpolados
+    // inicializamos os vetores que contem os pares ordenados a serem interpolados
     float X[7] = {0, 5, 10, 15, 20, 25, 30};
     float y[7] = {0.0, 1.5297, 9.512, 8.7025, 2.8087, 1.0881, 0.3537};
+    
+    // calculando os coeficientes do polinomio de newton
+    // p(x) = c0 + c1(x-x0) + c2(x-x0)(x-x1) + c3(x-x0)(x-x1)(x-x2) + c4(x-x0)(x-x1)(x-x2)(x-x3) + c5(x-x0)(x-x1)(x-x2)(x-x3)(x-x4) + c6(x-x0)(x-x1)(x-x2)(x-x3)(x-x4)(x-x5)
+    float x0 = X[0];
+    float x1 = X[1];
+    float x2 = X[2];
+    float x3 = X[3];
+    float x4 = X[4];
+    float x5 = X[5];
+    float x6 = X[6];
 
-    float prod = 1;
-    float som = 0;
-    int x = 1;
+    float c0 = 0;
+    float c1 = -c0 + y[1]/(x1-x0);
+    float c2 = (y[2]-c0-c1*(x2-x0))/((x2-x0)*(x2-x1)); 
+    float c3 = (y[3]-c0-c1*(x3-x0)-c2*(x3-x0)*(x3-x1))/((x3-x0)*(x3-x1)*(x3-x2));
+    float c4 = (y[4]-c0-c1*(x4-x0)-c2*(x4-x0)*(x4-x1)-c3*(x4-x0)*(x4-x1)*(x4-x2))/((x4-x0)*(x4-x1)*(x4-x2)*(x4-x3));
+    float c5 = (y[5]-c0-c1*(x5-x0)-c2*(x5-x0)*(x5-x1)-c3*(x5-x0)*(x5-x1)*(x5-x2)-c4*(x5-x0)*(x5-x1)*(x5-x2)*(x5-x3))/((x5-x0)*(x5-x1)*(x5-x2)*(x5-x3)*(x5-x4));
+    float c6 = (y[6]-c0-c1*(x6-x0)-c2*(x6-x0)*(x6-x1)-c3*(x6-x0)*(x6-x1)*(x6-x2)-c4*(x6-x0)*(x6-x1)*(x6-x2)*(x6-x3)-c5*(x6-x0)*(x6-x1)*(x6-x2)*(x6-x3)*(x6-x4))/((x6-x0)*(x6-x1)*(x6-x2)*(x6-x3)*(x6-x4)*(x6-x5));
     
-    // calculando os polinomios de Lagrange
-    for (int j=0; j<7; j++){
-        for (int i=0; i<7; i++){
-            if (i != j){
-                //cout << "X[i] = " << X[i] << ", X[j] = " << X[j] << endl;
-                prod = prod * ((x-X[i])/(X[j]-X[i]));
-                //cout << "polinomio atual com i = " << i << " eh " << produtorio << endl;
-            }
-        }
-        som = prod * y[j];
-        cout << "soma do trabalho ate x" << j << " = " << som << endl;
-        prod = 1;
+    //interpolando os pontos
+    float p[7];
+    for(int i=0;i<7;i++){
+        float x=X[i];
+        p[i] = c0 + c1*(x-x0) + c2*(x-x0)*(x-x1) + c3*(x-x0)*(x-x1)*(x-x2) + c4*(x-x0)*(x-x1)*(x-x2)*(x-x3) + c5*(x-x0)*(x-x1)*(x-x2)*(x-x3)*(x-x4) + c6*(x-x0)*(x-x1)*(x-x2)*(x-x3)*(x-x4)*(x-x5);
     }
-    cout << "O valor da funcao interpolada eh " << som << "\n" << endl;
+
+    for (int j=0; j<7; j++){
+        cout << "O valor de p(" << j << ") = " << p[j] << endl;
+    }
     
-    // (iia) Aproximacao do valor do trabalho usando regra do trapezio composta 
-    float h = (X[0]-X[1])/6;
-    float somatorio = (h/2)*y[0];
-    for (int i=1;i<6;i++){
-        somatorio += h*y[1];
+    /* (iia) Aproximacao do valor do trabalho usando regra do trapezio composta */
+    float b = X[6];
+    float a = X[0];
+    int r=6;
+    float h = (b-a)/r; //dividido pelo numero de subintervalos (n-1)
+    float somatorio = (h/2)*y[0];//eh zero
+    for (int i=1;i<r-1;i++){
+        somatorio += h*y[i];
     }
     somatorio += (h/2)*y[6];
     
     cout << "Aproximando pela regra do trapezio composta, o valor do trabalho equivale a " << somatorio << "\n" << endl;
     
-    // (iib) Aproximação por regra de Simpson composta 
-    float som1 = 0;
-    float som2 = 0;
+    /* (iib) Aproximação por regra de Simpson composta */
+    float sum1 = 0;
+    float sum2 = 0;
     
     // primeiro somatorio = sum^{n-2}_{k=1} f(x_{2k-1})
-    for (int i=0;i<=(6-2);i++){
+    for (int i=1;i<=r/2;i++){
         if (2*i-1>=0){
-            som1 += y[2*i-1];
+            sum1 += y[2*i-1];
         }
     }
-    som1 *= 4;
+    sum1 *= 4;
     
     // segundo somatorio = sum^{n/2-1}_{k=1} f(x_{2k})
-    for (int i=0;i<=((6/2)-1);i++){
-        som2 += y[2*i];
+    for (int i=1;i<=((r/2)-1);i++){
+        sum2 += y[2*i];
     }
-    som2 *= 2;
+    sum2 *= 2;
     
     float sn;
-    sn = (h/3)*(y[0]+y[6]+som1+som2);
+    sn = (h/3)*(y[0]+y[6]+sum1+sum2);
     
     cout << "Aproximando pela regra de simpson composta, o valor do trabalho equivale a " << sn << "\n" << endl;
-    */
-    return; 
+
+    return;
 }
 
 ////////////// PARTE 2 //////////////
@@ -151,16 +166,16 @@ void parte2(){
 
     n = 1000;
     //integrais multidimensionais
-    cout << "Aproximacao do valor de pi: " << multi(n);
+    cout << "Aproximacao do valor de pi: " << multi(n) << endl;
     
     return;
 }
 
 int main(){
     
-    //calculo do trabalho
-    //parte1();
-    //integracao por monte carlo
+    cout<< "Parte 1: Computando o trabalho\n" << endl;
+    parte1();
+    cout<< "Parte 2: Integracao por Monte Carlo\n" << endl;
     parte2();
 
     return 1;
